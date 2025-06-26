@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速Banner高度测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding-bottom: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .test-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .height-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        button {
+            padding: 12px 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .current {
+            background: #4CAF50 !important;
+            color: white !important;
+        }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .game-area {
+            background: rgba(0, 0, 0, 0.3);
+            min-height: 400px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .control-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-row button {
+            flex: 1;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 快速Banner高度测试</h1>
+    <p>当前游戏界面，Banner会显示在底部</p>
+    
+    <div class="test-panel">
+        <h3>⚡ 快速高度选择</h3>
+        <div class="height-buttons">
+            <button onclick="quickSet(1)">1px</button>
+            <button onclick="quickSet(2)">2px</button>
+            <button onclick="quickSet(3)">3px</button>
+            <button onclick="quickSet(5)" class="current">5px</button>
+            <button onclick="quickSet(8)">8px</button>
+            <button onclick="quickSet(10)">10px</button>
+            <button onclick="quickSet(15)">15px</button>
+            <button onclick="quickSet(20)">20px</button>
+        </div>
+        
+        <div class="control-row">
+            <button onclick="hideBanner()" style="background: #f44336; color: white;">隐藏Banner</button>
+            <button onclick="showBanner()" style="background: #4CAF50; color: white;">显示Banner</button>
+            <button onclick="getCurrentHeight()" style="background: #2196F3; color: white;">检查当前高度</button>
+        </div>
+    </div>
+    
+    <div class="status" id="status">
+        等待测试...点击上方按钮选择Banner高度
+    </div>
+    
+    <div class="game-area">
+        🎮 这里是游戏区域<br>
+        Banner会显示在页面最底部<br>
+        <small>(滚动到底部查看Banner效果)</small>
+    </div>
+
+    <!-- 加载PokiSDK -->
+    <script src="scripts/v2/poki-sdk.js"></script>
+    
+    <script>
+        let currentHeight = 5;
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = `
+                <strong>状态:</strong> ${message}<br>
+                <strong>当前Banner高度:</strong> ${currentHeight}px<br>
+                <strong>时间:</strong> ${new Date().toLocaleTimeString()}
+            `;
+        }
+        
+        function quickSet(height) {
+            currentHeight = height;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.height-buttons button').forEach(btn => {
+                btn.classList.remove('current');
+            });
+            event.target.classList.add('current');
+            
+            updateStatus(`设置Banner高度为 ${height}px...`);
+            
+            // 设置新配置
+            PokiSDK.setAutoBannerConfig({
+                height: height
+            });
+            
+            setTimeout(() => {
+                updateStatus(`✅ Banner高度已设置为 ${height}px`);
+                checkBannerElement();
+            }, 500);
+        }
+        
+        function hideBanner() {
+            PokiSDK.enableAutoBanner(false);
+            
+            // 移除Banner元素
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                banner.remove();
+            }
+            
+            updateStatus('❌ Banner已隐藏');
+        }
+        
+        function showBanner() {
+            PokiSDK.enableAutoBanner(true);
+            updateStatus('🔄 正在显示Banner...');
+            
+            setTimeout(() => {
+                updateStatus('✅ Banner已显示');
+                checkBannerElement();
+            }, 800);
+        }
+        
+        function getCurrentHeight() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                const rect = banner.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(banner);
+                
+                updateStatus(`
+                    📏 Banner尺寸信息:<br>
+                    - 实际显示高度: ${rect.height}px<br>
+                    - CSS高度: ${computedStyle.height}<br>
+                    - 配置高度: ${currentHeight}px<br>
+                    - 位置: bottom=${rect.bottom}px, top=${rect.top}px<br>
+                    - 是否可见: ${rect.height > 0 ? '✅ 是' : '❌ 否'}
+                `);
+            } else {
+                updateStatus('❌ 未找到Banner元素');
+            }
+        }
+        
+        function checkBannerElement() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                const rect = banner.getBoundingClientRect();
+                console.log(`Banner检查: 高度=${rect.height}px, 可见=${rect.height > 0}`);
+            }
+        }
+        
+        // 监听Banner事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            console.log('Banner加载成功:', event.detail);
+            updateStatus('✅ Banner广告加载成功!');
+            setTimeout(checkBannerElement, 200);
+        });
+        
+        window.addEventListener('bannerAdError', function(event) {
+            console.log('Banner加载失败:', event.detail);
+            updateStatus('❌ Banner广告加载失败: ' + event.detail.error);
+        });
+        
+        // 页面加载完成
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                updateStatus('📱 页面加载完成，等待Banner创建...');
+                
+                // 等待一下再检查
+                setTimeout(checkBannerElement, 2000);
+            }, 1000);
+        });
+        
+        // 定期检查Banner状态
+        setInterval(() => {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                const rect = banner.getBoundingClientRect();
+                if (rect.height !== currentHeight) {
+                    console.log(`高度不匹配: 实际=${rect.height}px, 期望=${currentHeight}px`);
+                }
+            }
+        }, 3000);
+    </script>
+</body>
+</html> 

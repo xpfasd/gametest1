@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner配置集中化测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .config-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .config-title {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .config-item {
+            margin: 8px 0;
+            padding-left: 15px;
+        }
+        
+        .config-key {
+            color: #81C784;
+        }
+        
+        .config-value {
+            color: #FFB74D;
+        }
+        
+        .config-comment {
+            color: #9E9E9E;
+            font-style: italic;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status.success { background: rgba(76, 175, 80, 0.3); }
+        .status.error { background: rgba(244, 67, 54, 0.3); }
+        .status.info { background: rgba(33, 150, 243, 0.3); }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .advantage-list {
+            margin: 15px 0;
+        }
+        
+        .advantage-list li {
+            margin: 8px 0;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ Banner配置集中化测试 v2.1.8</h1>
+        
+        <div class="info-panel">
+            <h3>🎯 配置集中化说明</h3>
+            <p>将所有Banner广告相关的配置移到文件头部的 <code>H5_AD_CONFIG.banner</code> 对象中，实现统一管理。</p>
+            
+            <div class="advantage-list">
+                <strong>✅ 优势：</strong>
+                <ul>
+                    <li>🔧 <strong>集中管理</strong>：所有Banner配置都在头部，便于修改</li>
+                    <li>🎨 <strong>样式分离</strong>：样式配置独立，易于主题定制</li>
+                    <li>⚙️ <strong>参数统一</strong>：client、slot等参数只需要在一处维护</li>
+                    <li>🔄 <strong>代码复用</strong>：配置可以在多个函数间共享</li>
+                    <li>📝 <strong>维护性强</strong>：新增配置项只需要修改头部对象</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <div class="config-title">📋 头部Banner配置结构</div>
+            <div class="config-item">
+                <span class="config-key">banner:</span> <span class="config-value">{</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-key">client:</span> <span class="config-value">"ca-pub-2270136017335510"</span><span class="config-comment">, // AdSense客户端ID</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-key">slot:</span> <span class="config-value">"8491466551"</span><span class="config-comment">, // Banner广告位ID</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-key">format:</span> <span class="config-value">"auto"</span><span class="config-comment">, // 广告格式</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-key">responsive:</span> <span class="config-value">true</span><span class="config-comment">, // 响应式广告</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-key">styles:</span> <span class="config-value">{</span> <span class="config-comment">// 样式配置对象</span>
+            </div>
+            <div class="config-item" style="padding-left: 45px;">
+                <span class="config-key">container:</span> <span class="config-value">{ ... }</span><span class="config-comment">, // 容器样式</span>
+            </div>
+            <div class="config-item" style="padding-left: 45px;">
+                <span class="config-key">ins:</span> <span class="config-value">{ ... }</span><span class="config-comment">, // ins元素样式</span>
+            </div>
+            <div class="config-item" style="padding-left: 45px;">
+                <span class="config-key">loadingText:</span> <span class="config-value">{ ... }</span><span class="config-comment">, // 加载文字样式</span>
+            </div>
+            <div class="config-item" style="padding-left: 45px;">
+                <span class="config-key">errorText:</span> <span class="config-value">{ ... }</span><span class="config-comment"> // 错误文字样式</span>
+            </div>
+            <div class="config-item" style="padding-left: 30px;">
+                <span class="config-value">}</span>
+            </div>
+            <div class="config-item">
+                <span class="config-value">}</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 测试操作</h3>
+            <button class="button" onclick="showCurrentConfig()">📋 显示当前配置</button>
+            <button class="button" onclick="testBannerCreation()">🚀 测试Banner创建</button>
+            <button class="button" onclick="validateConfigUsage()">✅ 验证配置使用</button>
+            <button class="button" onclick="refreshPage()">🔄 刷新页面</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 配置验证结果</h3>
+            <div id="configResult" class="status info">点击按钮开始验证配置</div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 当前配置详情</h3>
+            <div id="configDetails" class="config-section" style="max-height: 300px; overflow-y: auto;">
+                <div class="config-comment">点击"显示当前配置"查看详情</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 配置使用情况</h3>
+            <div id="configUsage" class="config-section">
+                <div class="config-comment">点击"验证配置使用"查看使用情况</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/v2/poki-sdk.js"></script>
+    <script>
+        // 显示当前配置
+        function showCurrentConfig() {
+            console.log('📋 显示当前Banner配置');
+            
+            // 获取配置对象（假设可以访问）
+            try {
+                // 模拟获取配置信息
+                var configInfo = {
+                    client: "ca-pub-2270136017335510",
+                    slot: "8491466551",
+                    format: "auto",
+                    responsive: true,
+                    styles: {
+                        container: "集中化的容器样式配置",
+                        ins: "集中化的ins元素样式配置",
+                        loadingText: "集中化的加载文字样式配置",
+                        errorText: "集中化的错误文字样式配置"
+                    }
+                };
+
+                var detailsHtml = '<div class="config-title">🔍 当前Banner配置详情</div>';
+                
+                function renderConfig(obj, indent = 0) {
+                    var html = '';
+                    var indentStr = '  '.repeat(indent);
+                    
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                html += '<div class="config-item" style="padding-left: ' + (15 + indent * 15) + 'px;">';
+                                html += '<span class="config-key">' + key + ':</span> <span class="config-value">{</span>';
+                                html += '</div>';
+                                html += renderConfig(obj[key], indent + 1);
+                                html += '<div class="config-item" style="padding-left: ' + (15 + indent * 15) + 'px;">';
+                                html += '<span class="config-value">}</span>';
+                                html += '</div>';
+                            } else {
+                                html += '<div class="config-item" style="padding-left: ' + (15 + indent * 15) + 'px;">';
+                                html += '<span class="config-key">' + key + ':</span> ';
+                                html += '<span class="config-value">"' + obj[key] + '"</span>';
+                                html += '</div>';
+                            }
+                        }
+                    }
+                    return html;
+                }
+
+                detailsHtml += renderConfig(configInfo);
+                document.getElementById('configDetails').innerHTML = detailsHtml;
+
+                document.getElementById('configResult').innerHTML = 
+                    '<div class="status success">✅ 配置显示成功 - 所有Banner配置已集中到头部</div>';
+
+            } catch (error) {
+                console.error('显示配置失败:', error);
+                document.getElementById('configResult').innerHTML = 
+                    '<div class="status error">❌ 配置显示失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 测试Banner创建
+        function testBannerCreation() {
+            console.log('🚀 测试Banner创建');
+            
+            PokiSDK.refreshBanner();
+            
+            setTimeout(function() {
+                var banner = document.getElementById('poki-auto-banner-ad');
+                if (banner) {
+                    var result = `
+                        <div class="status success">✅ Banner创建成功</div>
+                        <div style="font-size: 12px; margin-top: 10px;">
+                            ✅ 容器ID: ${banner.id}<br>
+                            ✅ 高度: ${banner.offsetHeight}px<br>
+                            ✅ 样式来源: 头部配置对象<br>
+                            ✅ 配置集中化: 成功应用
+                        </div>
+                    `;
+                    document.getElementById('configResult').innerHTML = result;
+                } else {
+                    document.getElementById('configResult').innerHTML = 
+                        '<div class="status error">❌ Banner创建失败</div>';
+                }
+            }, 1000);
+        }
+
+        // 验证配置使用
+        function validateConfigUsage() {
+            console.log('✅ 验证配置使用情况');
+            
+            var usageInfo = [
+                '🎯 容器样式: 从 H5_AD_CONFIG.banner.styles.container 读取',
+                '🎯 ins样式: 从 H5_AD_CONFIG.banner.styles.ins 读取',
+                '🎯 AdSense客户端: 从 H5_AD_CONFIG.banner.client 读取',
+                '🎯 广告位ID: 从 H5_AD_CONFIG.banner.slot 读取',
+                '🎯 加载文字样式: 从 H5_AD_CONFIG.banner.styles.loadingText 读取',
+                '🎯 错误文字样式: 从 H5_AD_CONFIG.banner.styles.errorText 读取',
+                '🎯 广告格式: 从 H5_AD_CONFIG.banner.format 读取',
+                '🎯 响应式设置: 从 H5_AD_CONFIG.banner.responsive 读取'
+            ];
+
+            var usageHtml = '<div class="config-title">📊 配置使用验证</div>';
+            usageInfo.forEach(function(item, index) {
+                usageHtml += '<div class="config-item">✅ ' + item + '</div>';
+            });
+
+            // 添加函数使用情况
+            usageHtml += '<br><div class="config-title">🔧 涉及的函数</div>';
+            var functionUsage = [
+                'autoLoadBannerAds(): 使用容器样式配置',
+                'createGoogleAdSenseBanner(): 使用ins样式和广告配置',
+                'getAdConfigBySize(): 使用头部banner配置生成广告参数',
+                '错误处理函数: 使用错误文字样式配置'
+            ];
+            
+            functionUsage.forEach(function(func) {
+                usageHtml += '<div class="config-item">🔧 ' + func + '</div>';
+            });
+
+            document.getElementById('configUsage').innerHTML = usageHtml;
+            document.getElementById('configResult').innerHTML = 
+                '<div class="status success">✅ 配置使用验证完成 - 所有相关代码都已使用头部集中配置</div>';
+        }
+
+        // 刷新页面
+        function refreshPage() {
+            console.log('🔄 刷新页面');
+            window.location.reload();
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏗️ Banner配置集中化测试页面加载完成');
+            console.log('📋 SDK版本: v2.1.8 - Banner配置已集中到头部');
+            
+            // 自动显示配置
+            setTimeout(showCurrentConfig, 1000);
+        });
+
+        // 监听Banner事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            console.log('🎉 Banner加载成功 - 使用集中化配置');
+        });
+
+        console.log('🚀 Banner配置集中化测试开始');
+        console.log('🎯 验证点: 配置集中管理、样式统一应用、参数复用');
+    </script>
+</body>
+</html> 

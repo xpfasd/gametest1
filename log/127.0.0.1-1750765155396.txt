@@ -1,0 +1,95 @@
+index.html:1 Uncaught (in promise) TypeError: Failed to register a ServiceWorker for scope ('http://127.0.0.1:5500/') with script ('http://127.0.0.1:5500/sw_transsion.js'): A bad HTTP response code (404) was received when fetching the script.
+autofill.5d54c8ce.js:2954 Refused to run the JavaScript URL because it violates the following Content Security Policy directive: "script-src 'self' 'wasm-unsafe-eval' 'inline-speculation-rules' chrome-extension://8f96904c-6d3b-43aa-8d7d-7f6866887235/". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present.
+
+dispatch @ autofill.5d54c8ce.js:2954
+post_extract.0e0be88c.js:1124 Remove comments then Remove csuiElements then extractMainContent by Readability error TypeError: Cannot read properties of null (reading 'tagName')
+    at Readability._grabArticle (post_extract.0e0be88c.js:2327:44)
+    at Readability.parse (post_extract.0e0be88c.js:3199:35)
+    at extractMainContent2 (post_extract.0e0be88c.js:1115:36)
+    at extractPageContent (contents.85aba5ab.js:26201:75)
+    at onPageLoad (contents.85aba5ab.js:26639:13)
+    at contents.85aba5ab.js:26645:48
+    at commitHookEffectListMount (contents.85aba5ab.js:19842:38)
+    at commitPassiveMountOnFiber (contents.85aba5ab.js:20977:24)
+    at commitPassiveMountEffects_complete (contents.85aba5ab.js:20946:21)
+    at commitPassiveMountEffects_begin (contents.85aba5ab.js:20937:20)
+extractMainContent2 @ post_extract.0e0be88c.js:1124
+post_extract.0e0be88c.js:1147 Not remove comments, remove csuiElements, extractMainContent by Readability error TypeError: Cannot read properties of null (reading 'tagName')
+    at Readability._grabArticle (post_extract.0e0be88c.js:2327:44)
+    at Readability.parse (post_extract.0e0be88c.js:3199:35)
+    at extractMainContent2 (post_extract.0e0be88c.js:1137:40)
+    at extractPageContent (contents.85aba5ab.js:26201:75)
+    at onPageLoad (contents.85aba5ab.js:26639:13)
+    at contents.85aba5ab.js:26645:48
+    at commitHookEffectListMount (contents.85aba5ab.js:19842:38)
+    at commitPassiveMountOnFiber (contents.85aba5ab.js:20977:24)
+    at commitPassiveMountEffects_complete (contents.85aba5ab.js:20946:21)
+    at commitPassiveMountEffects_begin (contents.85aba5ab.js:20937:20)
+extractMainContent2 @ post_extract.0e0be88c.js:1147
+contents.85aba5ab.js:26205 extractPost error TypeError: Cannot read properties of null (reading 'tagName')
+    at Readability._grabArticle (post_extract.0e0be88c.js:2327:44)
+    at Readability.parse (post_extract.0e0be88c.js:3199:35)
+    at extractMainContent2 (post_extract.0e0be88c.js:1156:36)
+    at extractPageContent (contents.85aba5ab.js:26201:75)
+    at onPageLoad (contents.85aba5ab.js:26639:13)
+    at contents.85aba5ab.js:26645:48
+    at commitHookEffectListMount (contents.85aba5ab.js:19842:38)
+    at commitPassiveMountOnFiber (contents.85aba5ab.js:20977:24)
+    at commitPassiveMountEffects_complete (contents.85aba5ab.js:20946:21)
+    at commitPassiveMountEffects_begin (contents.85aba5ab.js:20937:20)
+extractPageContent @ contents.85aba5ab.js:26205
+appmanifest.json:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)
+index.html:1 Manifest fetch from http://127.0.0.1:5500/appmanifest.json failed, code 404
+index.html:1 Uncaught (in promise) TypeError: Failed to register a ServiceWorker for scope ('http://127.0.0.1:5500/') with script ('http://127.0.0.1:5500/sw_transsion.js'): A bad HTTP response code (404) was received when fetching the script.
+appmanifest.json:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)
+index.html:1 Manifest fetch from http://127.0.0.1:5500/appmanifest.json failed, code 404
+nlp.5e4dd09e.js:213 WebSocket connection to 'ws://localhost:1815/' failed: 
+P @ nlp.5e4dd09e.js:213
+poki-sdk.js:922 PokiSDK detected error: null
+（匿名） @ poki-sdk.js:922
+athena-etm.js?v=5835884:1 Uncaught TypeError: l is not a function
+    at c.pageVisibleChange (athena-etm.js?v=5835884:1:8117)
+ads:1 
+            
+            
+           Failed to load resource: the server responded with a status of 403 ()
+ads:1 
+            
+            
+           Failed to load resource: the server responded with a status of 403 ()
+autofill.5d54c8ce.js:213 WebSocket connection to 'ws://localhost:1815/' failed: 
+P @ autofill.5d54c8ce.js:213
+post_extract.0e0be88c.js:213 WebSocket connection to 'ws://localhost:1815/' failed: 
+P @ post_extract.0e0be88c.js:213
+contents.85aba5ab.js:213 WebSocket connection to 'ws://localhost:1815/' failed: 
+P @ contents.85aba5ab.js:213
+appmanifest.json:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)
+poki-sdk.js:922 PokiSDK detected error: null
+（匿名） @ poki-sdk.js:922
+athena-etm.js?v=5835884:1 Uncaught TypeError: l is not a function
+    at athena-etm.js?v=5835884:1:7684
+（匿名） @ athena-etm.js?v=5835884:1
+poki-sdk.js:922 PokiSDK detected error: null
+（匿名） @ poki-sdk.js:922
+athena-etm.js?v=5835884:1 Uncaught TypeError: l is not a function
+    at c.pageVisibleChange (athena-etm.js?v=5835884:1:8117)
+c.pageVisibleChange @ athena-etm.js?v=5835884:1
+poki-sdk.js:922 PokiSDK detected error: null
+（匿名） @ poki-sdk.js:922
+athena-etm.js?v=5835884:1 Uncaught TypeError: l is not a function
+    at c.pageVisibleChange (athena-etm.js?v=5835884:1:8117)
+c.pageVisibleChange @ athena-etm.js?v=5835884:1
+poki-sdk.js:922 PokiSDK detected error: null
+（匿名） @ poki-sdk.js:922
+athena-etm.js?v=5835884:1 Uncaught TypeError: l is not a function
+    at c.pageVisibleChange (athena-etm.js?v=5835884:1:8117)
+c.pageVisibleChange @ athena-etm.js?v=5835884:1

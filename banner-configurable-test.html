@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可配置Banner广告测试 - v2.1.0</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .feature-box {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #4ade80;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .config-section {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .config-section label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        
+        .config-section input {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 10px;
+        }
+        
+        .config-section button {
+            background: #4ade80;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .config-section button:hover {
+            background: #22c55e;
+        }
+        
+        .preset-buttons {
+            margin: 15px 0;
+        }
+        
+        .preset-buttons button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .preset-buttons button:hover {
+            background: #2563eb;
+        }
+        
+        .status-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            word-wrap: break-word;
+        }
+        
+        .log-info { color: #60a5fa; }
+        .log-success { color: #4ade80; }
+        .log-warning { color: #fbbf24; }
+        .log-error { color: #f87171; }
+        
+        .demo-content {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎛️ 可配置Banner广告测试 v2.1.0</h1>
+        
+        <div class="feature-box">
+            <h3>✨ 新特性：可配置化Banner尺寸</h3>
+            <ul>
+                <li>✅ 支持自定义Banner宽度和高度</li>
+                <li>✅ 默认尺寸：320x25px</li>
+                <li>✅ 动态生成AdSense配置</li>
+                <li>✅ 实时配置生效</li>
+                <li>✅ 预设常用尺寸</li>
+            </ul>
+        </div>
+        
+        <div class="control-panel">
+            <h3>🎮 Banner配置控制</h3>
+            
+            <div class="config-section">
+                <h4>自定义尺寸</h4>
+                <label>宽度:</label>
+                <input type="number" id="banner-width" value="320" min="100" max="1000">
+                px
+                <label>高度:</label>
+                <input type="number" id="banner-height" value="25" min="10" max="200">
+                px
+                <button onclick="applyCustomSize()">应用自定义尺寸</button>
+            </div>
+            
+            <div class="preset-buttons">
+                <h4>预设尺寸</h4>
+                <button onclick="setPresetSize(320, 25)">320x25 (默认)</button>
+                <button onclick="setPresetSize(320, 50)">320x50 (标准)</button>
+                <button onclick="setPresetSize(728, 90)">728x90 (横幅)</button>
+                <button onclick="setPresetSize(300, 250)">300x250 (中矩形)</button>
+                <button onclick="setPresetSize(250, 250)">250x250 (方形)</button>
+                <button onclick="setPresetSize(160, 600)">160x600 (摩天大楼)</button>
+            </div>
+            
+            <div class="config-section">
+                <h4>其他配置</h4>
+                <label>启用状态:</label>
+                <button onclick="toggleAutoBanner()" id="toggle-btn">禁用自动Banner</button>
+                <label>延迟时间:</label>
+                <input type="number" id="banner-delay" value="500" min="0" max="5000">
+                ms
+                <button onclick="applyDelay()">应用延迟</button>
+            </div>
+        </div>
+        
+        <div class="status-panel">
+            <h3>📊 当前配置状态</h3>
+            <div id="status-display">正在检查...</div>
+        </div>
+        
+        <div class="control-panel">
+            <h3>🔧 测试操作</h3>
+            <button onclick="getCurrentConfig()">获取当前配置</button>
+            <button onclick="removeBanner()">移除Banner</button>
+            <button onclick="recreateBanner()">重新创建Banner</button>
+            <button onclick="clearLogs()">清空日志</button>
+        </div>
+        
+        <div class="demo-content">
+            <h3>🎮 演示内容区域</h3>
+            <p>这里是模拟的游戏/应用内容</p>
+            <p>Banner会根据配置的尺寸自动显示在页面底部</p>
+        </div>
+        
+        <div class="log-area" id="log-area">
+            <div class="log-info">日志输出区域...</div>
+        </div>
+    </div>
+
+    <!-- 加载SDK -->
+    <script src="scripts/v2/poki-sdk.js"></script>
+
+    <script>
+        let currentConfig = { enabled: true };
+        
+        // 日志系统
+        function addLog(message, type = 'info') {
+            const logArea = document.getElementById('log-area');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        // 应用自定义尺寸
+        function applyCustomSize() {
+            const width = parseInt(document.getElementById('banner-width').value);
+            const height = parseInt(document.getElementById('banner-height').value);
+            
+            if (width < 100 || width > 1000) {
+                addLog('❌ 宽度必须在100-1000px之间', 'error');
+                return;
+            }
+            
+            if (height < 10 || height > 200) {
+                addLog('❌ 高度必须在10-200px之间', 'error');
+                return;
+            }
+            
+            setSize(width, height);
+        }
+        
+        // 设置预设尺寸
+        function setPresetSize(width, height) {
+            document.getElementById('banner-width').value = width;
+            document.getElementById('banner-height').value = height;
+            setSize(width, height);
+        }
+        
+        // 设置尺寸
+        function setSize(width, height) {
+            addLog(`🎯 设置Banner尺寸为: ${width}x${height}`, 'info');
+            
+            window.PokiSDK.setAutoBannerConfig({
+                enabled: currentConfig.enabled,
+                width: width,
+                height: height,
+                delay: parseInt(document.getElementById('banner-delay').value)
+            });
+            
+            // 重新创建Banner以应用新尺寸
+            recreateBanner();
+            updateStatus();
+        }
+        
+        // 应用延迟配置
+        function applyDelay() {
+            const delay = parseInt(document.getElementById('banner-delay').value);
+            addLog(`⏱️ 设置延迟时间为: ${delay}ms`, 'info');
+            
+            window.PokiSDK.setAutoBannerConfig({
+                enabled: currentConfig.enabled,
+                delay: delay
+            });
+            
+            updateStatus();
+        }
+        
+        // 切换自动Banner状态
+        function toggleAutoBanner() {
+            currentConfig.enabled = !currentConfig.enabled;
+            const btn = document.getElementById('toggle-btn');
+            
+            if (currentConfig.enabled) {
+                btn.textContent = '禁用自动Banner';
+                addLog('✅ 启用自动Banner', 'success');
+                window.PokiSDK.enableAutoBanner(true);
+            } else {
+                btn.textContent = '启用自动Banner';
+                addLog('❌ 禁用自动Banner', 'warning');
+                window.PokiSDK.enableAutoBanner(false);
+                removeBanner();
+            }
+            
+            updateStatus();
+        }
+        
+        // 获取当前配置
+        function getCurrentConfig() {
+            const config = window.PokiSDK.getAutoBannerConfig();
+            addLog('📋 当前配置: ' + JSON.stringify(config, null, 2), 'info');
+            updateStatus();
+        }
+        
+        // 移除Banner
+        function removeBanner() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                banner.remove();
+                addLog('🗑️ Banner已移除', 'warning');
+            } else {
+                addLog('⚠️ 没有找到Banner容器', 'warning');
+            }
+            updateStatus();
+        }
+        
+        // 重新创建Banner
+        function recreateBanner() {
+            if (!currentConfig.enabled) {
+                addLog('⚠️ 自动Banner已禁用，无法创建', 'warning');
+                return;
+            }
+            
+            // 先移除现有的
+            removeBanner();
+            
+            // 延迟重新启用以触发创建
+            setTimeout(() => {
+                addLog('🔄 重新创建Banner...', 'info');
+                window.PokiSDK.enableAutoBanner(false);
+                setTimeout(() => {
+                    window.PokiSDK.enableAutoBanner(true);
+                }, 100);
+            }, 100);
+        }
+        
+        // 清空日志
+        function clearLogs() {
+            document.getElementById('log-area').innerHTML = '<div class="log-info">日志已清空</div>';
+        }
+        
+        // 更新状态显示
+        function updateStatus() {
+            const statusDiv = document.getElementById('status-display');
+            const banner = document.getElementById('poki-auto-banner-ad');
+            const config = window.PokiSDK.getAutoBannerConfig();
+            
+            statusDiv.innerHTML = `
+                <div><strong>SDK版本:</strong> 2.1.0</div>
+                <div><strong>自动Banner:</strong> ${config.enabled ? '✅ 已启用' : '❌ 已禁用'}</div>
+                <div><strong>配置尺寸:</strong> ${config.width}x${config.height}px</div>
+                <div><strong>延迟时间:</strong> ${config.delay}ms</div>
+                <div><strong>Banner容器:</strong> ${banner ? '✅ 已创建' : '❌ 不存在'}</div>
+                <div><strong>实际尺寸:</strong> ${banner ? banner.offsetWidth + 'x' + banner.offsetHeight + 'px' : 'N/A'}</div>
+                <div><strong>当前时间:</strong> ${new Date().toLocaleTimeString()}</div>
+            `;
+        }
+        
+        // 覆盖console方法来捕获SDK日志
+        const originalConsole = {
+            log: console.log,
+            warn: console.warn,
+            error: console.error
+        };
+        
+        console.log = function(...args) {
+            originalConsole.log.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('PokiSDK') || message.includes('Banner') || message.includes('🚀') || message.includes('✅') || message.includes('❌')) {
+                addLog(message, 'info');
+            }
+        };
+        
+        console.warn = function(...args) {
+            originalConsole.warn.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('PokiSDK') || message.includes('Banner')) {
+                addLog(message, 'warning');
+            }
+        };
+        
+        console.error = function(...args) {
+            originalConsole.error.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('PokiSDK') || message.includes('Banner')) {
+                addLog(message, 'error');
+            }
+        };
+        
+        // 监听Banner广告事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            addLog('🎉 Banner广告加载成功: ' + JSON.stringify(event.detail), 'success');
+            updateStatus();
+        });
+        
+        window.addEventListener('bannerAdError', function(event) {
+            addLog('❌ Banner广告加载失败: ' + JSON.stringify(event.detail), 'error');
+            updateStatus();
+        });
+        
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('=== 可配置Banner广告测试 v2.1.0 ===', 'success');
+            addLog('新特性: 支持动态配置Banner宽度和高度', 'info');
+            addLog('默认尺寸: 320x25px', 'info');
+            
+            // 定期更新状态
+            setInterval(updateStatus, 3000);
+            updateStatus();
+            
+            // 5秒后获取初始配置
+            setTimeout(() => {
+                getCurrentConfig();
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 

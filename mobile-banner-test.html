@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>移动端Banner高度测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 10px;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+        
+        .mobile-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .height-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .height-btn {
+            padding: 12px 6px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+        
+        .height-btn:active {
+            transform: scale(0.95);
+            background: #fff;
+        }
+        
+        .height-btn.active {
+            background: #FF5722;
+            color: white;
+        }
+        
+        .control-section {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .control-section h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #FFE0B2;
+        }
+        
+        .control-row {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        
+        .control-btn.primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .control-btn.danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .control-btn.info {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .status-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 11px;
+            border-left: 3px solid #4CAF50;
+            word-break: break-all;
+        }
+        
+        .game-simulation {
+            background: rgba(0, 0, 0, 0.3);
+            height: 200px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            font-size: 16px;
+        }
+        
+        .device-info {
+            background: rgba(255, 193, 7, 0.2);
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 11px;
+            border: 1px solid #FFC107;
+        }
+        
+        /* 强制移动端样式 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .height-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .control-row {
+                flex-direction: column;
+            }
+            
+            .control-btn {
+                flex: none;
+                width: 100%;
+            }
+        }
+        
+        /* 检测Banner容器的样式覆盖 */
+        #poki-auto-banner-ad {
+            transition: height 0.3s ease !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <h1>📱 移动端Banner高度测试</h1>
+        
+        <div class="device-info" id="device-info">
+            正在检测设备信息...
+        </div>
+        
+        <div class="control-section">
+            <h3>⚡ 快速高度选择</h3>
+            <div class="height-grid">
+                <button class="height-btn" onclick="setMobileHeight(1)">1px</button>
+                <button class="height-btn" onclick="setMobileHeight(2)">2px</button>
+                <button class="height-btn" onclick="setMobileHeight(3)">3px</button>
+                <button class="height-btn active" onclick="setMobileHeight(5)">5px</button>
+                <button class="height-btn" onclick="setMobileHeight(8)">8px</button>
+                <button class="height-btn" onclick="setMobileHeight(10)">10px</button>
+                <button class="height-btn" onclick="setMobileHeight(15)">15px</button>
+                <button class="height-btn" onclick="setMobileHeight(20)">20px</button>
+                <button class="height-btn" onclick="setMobileHeight(25)">25px</button>
+                <button class="height-btn" onclick="setMobileHeight(30)">30px</button>
+                <button class="height-btn" onclick="setMobileHeight(40)">40px</button>
+                <button class="height-btn" onclick="setMobileHeight(50)">50px</button>
+            </div>
+        </div>
+        
+        <div class="control-section">
+            <h3>🎮 控制操作</h3>
+            <div class="control-row">
+                <button class="control-btn danger" onclick="hideBanner()">隐藏</button>
+                <button class="control-btn primary" onclick="showBanner()">显示</button>
+                <button class="control-btn info" onclick="refreshBanner()">刷新</button>
+            </div>
+            <div class="control-row">
+                <button class="control-btn info" onclick="checkBannerSize()">检查尺寸</button>
+                <button class="control-btn info" onclick="forceMobileRefresh()">强制移动端刷新</button>
+            </div>
+        </div>
+        
+        <div class="status-card" id="status">
+            等待操作...
+        </div>
+        
+        <div class="game-simulation">
+            🎮 游戏模拟区域<br>
+            Banner将在底部显示
+        </div>
+    </div>
+
+    <!-- 加载PokiSDK -->
+    <script src="scripts/v2/poki-sdk.js"></script>
+    
+    <script>
+        let currentMobileHeight = 5;
+        
+        // 检测设备信息
+        function updateDeviceInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                screenWidth: screen.width,
+                screenHeight: screen.height,
+                windowWidth: window.innerWidth,
+                windowHeight: window.innerHeight,
+                devicePixelRatio: window.devicePixelRatio,
+                isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+                isStandalone: window.navigator.standalone === true,
+                viewportWidth: document.documentElement.clientWidth,
+                viewportHeight: document.documentElement.clientHeight
+            };
+            
+            document.getElementById('device-info').innerHTML = `
+                📱 ${info.isMobile ? '移动设备' : '桌面设备'} | 
+                屏幕: ${info.screenWidth}×${info.screenHeight} | 
+                视口: ${info.viewportWidth}×${info.viewportHeight} | 
+                DPR: ${info.devicePixelRatio}
+            `;
+        }
+        
+        function updateStatus(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            document.getElementById('status').innerHTML = `
+                <strong>状态:</strong> ${message}<br>
+                <strong>当前高度:</strong> ${currentMobileHeight}px<br>
+                <strong>时间:</strong> ${timestamp}
+            `;
+        }
+        
+        function setMobileHeight(height) {
+            currentMobileHeight = height;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.height-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateStatus(`正在设置移动端Banner高度为 ${height}px...`);
+            
+            // 设置配置
+            PokiSDK.setAutoBannerConfig({
+                height: height
+            });
+            
+            // 在移动端，强制刷新Banner
+            setTimeout(() => {
+                forceMobileRefresh();
+                updateStatus(`✅ 移动端Banner高度已设置为 ${height}px`);
+            }, 300);
+        }
+        
+        function hideBanner() {
+            PokiSDK.enableAutoBanner(false);
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                banner.remove();
+            }
+            updateStatus('❌ Banner已隐藏');
+        }
+        
+        function showBanner() {
+            PokiSDK.enableAutoBanner(true);
+            updateStatus('🔄 正在显示Banner...');
+            
+            setTimeout(() => {
+                updateStatus('✅ Banner已显示');
+                checkBannerSize();
+            }, 1000);
+        }
+        
+        function refreshBanner() {
+            updateStatus('🔄 正在刷新Banner...');
+            PokiSDK.refreshBanner();
+            
+            setTimeout(() => {
+                updateStatus('✅ Banner刷新完成');
+                checkBannerSize();
+            }, 800);
+        }
+        
+        function forceMobileRefresh() {
+            updateStatus('📱 强制移动端刷新...');
+            
+            // 先移除现有Banner
+            const existingBanner = document.getElementById('poki-auto-banner-ad');
+            if (existingBanner) {
+                existingBanner.remove();
+                console.log('移动端强制刷新: 移除现有Banner');
+            }
+            
+            // 延迟重新创建，确保移动端渲染完成
+            setTimeout(() => {
+                PokiSDK.refreshBanner();
+                updateStatus('📱 移动端强制刷新完成');
+                
+                setTimeout(checkBannerSize, 500);
+            }, 200);
+        }
+        
+        function checkBannerSize() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                const rect = banner.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(banner);
+                
+                updateStatus(`
+                    📏 移动端Banner尺寸:<br>
+                    - 实际高度: ${rect.height}px<br>
+                    - CSS高度: ${computedStyle.height}<br>
+                    - 最小高度: ${computedStyle.minHeight}<br>
+                    - 最大高度: ${computedStyle.maxHeight}<br>
+                    - 配置高度: ${currentMobileHeight}px<br>
+                    - 位置: top=${Math.round(rect.top)}px, bottom=${Math.round(rect.bottom)}px<br>
+                    - 是否可见: ${rect.height > 0 ? '✅' : '❌'}<br>
+                    - 宽度: ${rect.width}px (${Math.round(rect.width/window.innerWidth*100)}%屏宽)
+                `);
+                
+                console.log('移动端Banner检查:', {
+                    actualHeight: rect.height,
+                    configHeight: currentMobileHeight,
+                    cssHeight: computedStyle.height,
+                    minHeight: computedStyle.minHeight,
+                    maxHeight: computedStyle.maxHeight,
+                    position: rect
+                });
+            } else {
+                updateStatus('❌ 未找到Banner元素');
+            }
+        }
+        
+        // 监听屏幕方向变化
+        function handleOrientationChange() {
+            setTimeout(() => {
+                updateDeviceInfo();
+                updateStatus('📱 屏幕方向已变更，正在检查Banner...');
+                setTimeout(checkBannerSize, 300);
+            }, 100);
+        }
+        
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+        
+        // 监听Banner事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            console.log('移动端Banner加载成功:', event.detail);
+            updateStatus('✅ 移动端Banner广告加载成功!');
+            setTimeout(checkBannerSize, 200);
+        });
+        
+        window.addEventListener('bannerAdError', function(event) {
+            console.log('移动端Banner加载失败:', event.detail);
+            updateStatus('❌ 移动端Banner加载失败: ' + event.detail.error);
+        });
+        
+        // 页面加载完成
+        window.addEventListener('load', function() {
+            updateDeviceInfo();
+            setTimeout(() => {
+                updateStatus('📱 移动端页面加载完成');
+                setTimeout(checkBannerSize, 2000);
+            }, 1000);
+        });
+        
+        // 定期检查Banner状态
+        setInterval(() => {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                const rect = banner.getBoundingClientRect();
+                if (Math.abs(rect.height - currentMobileHeight) > 2) {
+                    console.log(`移动端高度异常: 实际=${rect.height}px, 期望=${currentMobileHeight}px`);
+                }
+            }
+        }, 5000);
+        
+        // 触摸事件优化
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        document.addEventListener('touchmove', function() {}, {passive: true});
+    </script>
+</body>
+</html> 

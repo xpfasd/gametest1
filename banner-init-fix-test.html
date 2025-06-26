@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner初始化高度修复测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .button.danger {
+            background: linear-gradient(45deg, #f44336, #da190b);
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status.success { background: rgba(76, 175, 80, 0.3); }
+        .status.error { background: rgba(244, 67, 54, 0.3); }
+        .status.info { background: rgba(33, 150, 243, 0.3); }
+        
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+            border: 1px solid #444;
+        }
+        
+        .game-area {
+            background: rgba(255, 255, 255, 0.1);
+            height: 300px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .device-info {
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .height-monitor {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 10000;
+            min-width: 200px;
+        }
+        
+        /* 为了测试，给body添加底部空间，避免Banner遮挡内容 */
+        body {
+            padding-bottom: 80px; /* 给Banner留出空间 */
+        }
+    </style>
+</head>
+<body>
+    <div class="height-monitor" id="heightMonitor">
+        <div><strong>📏 Banner高度实时监控</strong></div>
+        <div id="bannerStatus">等待Banner创建...</div>
+    </div>
+
+    <div class="container">
+        <h1>🔧 Banner初始化高度修复测试 v2.1.6</h1>
+        
+        <div class="info-panel">
+            <h3>🎯 测试目标</h3>
+            <p>验证Banner在初始化创建时就具有正确的高度（50px），而不需要手动调用设置方法才生效。</p>
+            <p><strong>修复内容：</strong></p>
+            <ul>
+                <li>✅ 容器创建时使用 !important 强制样式</li>
+                <li>✅ DOM插入后10ms再次强制设置高度</li>
+                <li>✅ ins元素创建时使用正确高度配置</li>
+                <li>✅ ins元素插入后20ms再次强制设置高度</li>
+                <li>✅ AdSense执行后100ms最终确保高度</li>
+            </ul>
+        </div>
+
+        <div class="device-info">
+            <strong>设备信息：</strong>
+            <span id="deviceInfo">检测中...</span>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 测试操作</h3>
+            <button class="button" onclick="reloadPage()">🔄 重新加载页面</button>
+            <button class="button" onclick="checkBannerHeight()">📏 检查当前Banner高度</button>
+            <button class="button" onclick="setBannerHeight50()">🎯 手动设置为50px</button>
+            <button class="button" onclick="setBannerHeight10()">📏 设置为10px测试</button>
+            <button class="button danger" onclick="clearBanner()">🗑️ 清除Banner</button>
+            <button class="button" onclick="recreateBanner()">🔨 重新创建Banner</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 当前Banner状态</h3>
+            <div id="bannerInfo" class="status info">正在检查Banner状态...</div>
+        </div>
+
+        <div class="game-area">
+            <div>🎮 模拟游戏区域<br>Banner应该在页面最底部显示</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 操作日志</h3>
+            <button class="button" onclick="clearLog()">🧹 清空日志</button>
+            <div id="testLog" class="log">日志初始化中...\n</div>
+        </div>
+    </div>
+
+    <script src="scripts/v2/poki-sdk.js"></script>
+    <script>
+        // 日志管理
+        function addLog(message) {
+            const log = document.getElementById('testLog');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('testLog').innerHTML = '日志已清空\n';
+        }
+
+        // 设备信息检测
+        function updateDeviceInfo() {
+            const info = document.getElementById('deviceInfo');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isTouch = 'ontouchstart' in window;
+            
+            info.innerHTML = `
+                屏幕: ${window.innerWidth}x${window.innerHeight} | 
+                设备: ${isMobile ? '📱 移动端' : '🖥️ 桌面端'} | 
+                触摸: ${isTouch ? '✅' : '❌'} | 
+                像素比: ${window.devicePixelRatio}
+            `;
+        }
+
+        // Banner高度检查
+        function checkBannerHeight() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (!banner) {
+                addLog('❌ 未找到Banner元素');
+                document.getElementById('bannerInfo').innerHTML = '<div class="status error">❌ Banner不存在</div>';
+                return;
+            }
+
+            const insElement = banner.querySelector('.adsbygoogle');
+            const info = {
+                container: {
+                    offsetHeight: banner.offsetHeight,
+                    clientHeight: banner.clientHeight,
+                    styleHeight: banner.style.height,
+                    computedHeight: window.getComputedStyle(banner).height
+                },
+                ins: insElement ? {
+                    offsetHeight: insElement.offsetHeight,
+                    clientHeight: insElement.clientHeight,
+                    styleHeight: insElement.style.height,
+                    computedHeight: window.getComputedStyle(insElement).height
+                } : null
+            };
+
+            addLog(`📏 Banner高度检查结果: 容器=${info.container.offsetHeight}px, ins=${info.ins ? info.ins.offsetHeight + 'px' : 'N/A'}`);
+            
+            const status = info.container.offsetHeight === 50 ? 'success' : 'error';
+            const statusText = info.container.offsetHeight === 50 ? '✅ 高度正确 (50px)' : `❌ 高度异常 (${info.container.offsetHeight}px)`;
+            
+            document.getElementById('bannerInfo').innerHTML = `
+                <div class="status ${status}">${statusText}</div>
+                <div style="font-size: 12px; margin-top: 10px;">
+                    <strong>容器:</strong> offset=${info.container.offsetHeight}px, style=${info.container.styleHeight}, computed=${info.container.computedHeight}<br>
+                    <strong>ins元素:</strong> ${info.ins ? `offset=${info.ins.offsetHeight}px, style=${info.ins.styleHeight}` : '未找到'}
+                </div>
+            `;
+        }
+
+        // 设置Banner高度
+        function setBannerHeight50() {
+            addLog('🎯 手动设置Banner高度为50px');
+            PokiSDK.setBannerHeight(50);
+            setTimeout(checkBannerHeight, 200);
+        }
+
+        function setBannerHeight10() {
+            addLog('📏 设置Banner高度为10px (测试)');
+            PokiSDK.setBannerHeight(10);
+            setTimeout(checkBannerHeight, 200);
+        }
+
+        // Banner操作
+        function clearBanner() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (banner) {
+                banner.remove();
+                addLog('🗑️ Banner已清除');
+            } else {
+                addLog('ℹ️ 没有Banner需要清除');
+            }
+            checkBannerHeight();
+        }
+
+        function recreateBanner() {
+            addLog('🔨 重新创建Banner');
+            PokiSDK.refreshBanner();
+            setTimeout(checkBannerHeight, 1000);
+        }
+
+        function reloadPage() {
+            addLog('🔄 重新加载页面');
+            window.location.reload();
+        }
+
+        // 实时监控Banner高度
+        function updateHeightMonitor() {
+            const monitor = document.getElementById('bannerStatus');
+            const banner = document.getElementById('poki-auto-banner-ad');
+            
+            if (!banner) {
+                monitor.innerHTML = `
+                    <div style="color: #ff6b6b;">❌ Banner不存在</div>
+                    <div style="font-size: 10px; color: #ccc;">等待创建中...</div>
+                `;
+                return;
+            }
+
+            const height = banner.offsetHeight;
+            const isCorrect = height === 50;
+            const color = isCorrect ? '#4CAF50' : '#ff6b6b';
+            const status = isCorrect ? '✅' : '❌';
+
+            monitor.innerHTML = `
+                <div style="color: ${color};">${status} 高度: ${height}px</div>
+                <div style="font-size: 10px; color: #ccc;">目标: 50px</div>
+                <div style="font-size: 10px; color: #ccc;">更新: ${new Date().toLocaleTimeString()}</div>
+            `;
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('📄 页面DOM加载完成');
+            updateDeviceInfo();
+            
+            // 开始监控Banner
+            setInterval(updateHeightMonitor, 500);
+            
+            // 等待Banner创建后检查
+            setTimeout(function() {
+                addLog('🔍 检查初始Banner状态');
+                checkBannerHeight();
+            }, 2000);
+        });
+
+        // 监听resize事件
+        window.addEventListener('resize', updateDeviceInfo);
+
+        // 监听Banner相关事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            addLog('🎉 Banner广告加载成功事件: ' + JSON.stringify(event.detail));
+            setTimeout(checkBannerHeight, 100);
+        });
+
+        window.addEventListener('bannerAdError', function(event) {
+            addLog('❌ Banner广告加载失败事件: ' + JSON.stringify(event.detail));
+        });
+
+        // 初始日志
+        addLog('🚀 Banner初始化高度修复测试开始');
+        addLog('📋 SDK版本: v2.1.6');
+        addLog('🎯 预期Banner高度: 50px');
+        addLog('⏰ 将在2秒后检查初始状态');
+    </script>
+</body>
+</html> 

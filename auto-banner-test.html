@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动Banner广告测试 - v2.0.0</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .status-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .feature-list {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .feature-list h3 {
+            color: #4ade80;
+            margin-top: 0;
+        }
+        
+        .feature-list ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .feature-list li {
+            margin: 8px 0;
+            color: #e5e7eb;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .control-panel button {
+            background: #4ade80;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .control-panel button:hover {
+            background: #22c55e;
+        }
+        
+        .control-panel button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            word-wrap: break-word;
+        }
+        
+        .log-info { color: #60a5fa; }
+        .log-success { color: #4ade80; }
+        .log-warning { color: #fbbf24; }
+        .log-error { color: #f87171; }
+        
+        .game-area {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        
+        .notice {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #4ade80;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .notice h4 {
+            color: #4ade80;
+            margin-top: 0;
+        }
+        
+        /* 为了给底部Banner腾出空间 */
+        body {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 自动Banner广告测试 v2.0.0</h1>
+        
+        <div class="notice">
+            <h4>✨ 新特性：自动底部Banner广告</h4>
+            <p>现在不需要在页面中预设任何容器，SDK会自动在页面底部创建并插入320x50的Banner广告。</p>
+        </div>
+        
+        <div class="feature-list">
+            <h3>🎯 主要特性：</h3>
+            <ul>
+                <li>✅ 自动在页面底部创建320x50横幅广告</li>
+                <li>✅ 固定位置显示（position: fixed; bottom: 0）</li>
+                <li>✅ 自动适配屏幕宽度，居中显示</li>
+                <li>✅ 加载状态指示器</li>
+                <li>✅ 加载失败时显示错误信息并自动隐藏</li>
+                <li>✅ 重复创建保护（防止多次创建）</li>
+                <li>✅ 高z-index确保在最上层显示</li>
+            </ul>
+        </div>
+        
+        <div class="status-panel">
+            <h3>📊 SDK状态</h3>
+            <div id="sdk-status">正在检查SDK状态...</div>
+        </div>
+        
+        <div class="control-panel">
+            <h3>🎮 控制面板</h3>
+            <button onclick="enableAutoBanner()">启用自动Banner</button>
+            <button onclick="disableAutoBanner()">禁用自动Banner</button>
+            <button onclick="manualLoadBanner()">手动加载Banner</button>
+            <button onclick="getConfig()">查看配置</button>
+            <button onclick="clearLogs()">清空日志</button>
+        </div>
+        
+        <div class="game-area">
+            <div>🎮 模拟游戏区域</div>
+        </div>
+        
+        <div class="log-area" id="log-area">
+            <div class="log-info">等待日志输出...</div>
+        </div>
+    </div>
+
+    <!-- 加载SDK -->
+    <script src="scripts/v2/poki-sdk.js"></script>
+
+    <script>
+        // 日志记录
+        function addLog(message, type = 'info') {
+            const logArea = document.getElementById('log-area');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        // 覆盖console.log来捕获SDK日志
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            if (message.includes('PokiSDK')) {
+                addLog(message, 'info');
+            }
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            if (message.includes('PokiSDK')) {
+                addLog(message, 'warning');
+            }
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            if (message.includes('PokiSDK')) {
+                addLog(message, 'error');
+            }
+        };
+        
+        // 控制函数
+        function enableAutoBanner() {
+            addLog('手动启用自动Banner广告', 'info');
+            window.PokiSDK.enableAutoBanner(true);
+        }
+        
+        function disableAutoBanner() {
+            addLog('手动禁用自动Banner广告', 'warning');
+            window.PokiSDK.enableAutoBanner(false);
+        }
+        
+        function manualLoadBanner() {
+            addLog('检查是否存在自动创建的Banner容器...', 'info');
+            const existingBanner = document.getElementById('poki-auto-banner-ad');
+            if (existingBanner) {
+                addLog('发现已存在的Banner容器，移除后重新创建', 'warning');
+                existingBanner.remove();
+            }
+            
+            // 触发自动加载
+            setTimeout(() => {
+                if (typeof autoLoadBannerAds === 'function') {
+                    autoLoadBannerAds();
+                } else {
+                    addLog('autoLoadBannerAds函数不可访问，尝试重新启用', 'warning');
+                    window.PokiSDK.enableAutoBanner(false);
+                    setTimeout(() => window.PokiSDK.enableAutoBanner(true), 100);
+                }
+            }, 100);
+        }
+        
+        function getConfig() {
+            const config = window.PokiSDK.getAutoBannerConfig();
+            addLog('当前自动Banner配置: ' + JSON.stringify(config, null, 2), 'info');
+        }
+        
+        function clearLogs() {
+            document.getElementById('log-area').innerHTML = '<div class="log-info">日志已清空</div>';
+        }
+        
+        // 监听Banner广告事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            addLog('🎉 Banner广告加载成功事件: ' + JSON.stringify(event.detail), 'success');
+            updateStatus();
+        });
+        
+        window.addEventListener('bannerAdError', function(event) {
+            addLog('❌ Banner广告加载失败事件: ' + JSON.stringify(event.detail), 'error');
+            updateStatus();
+        });
+        
+        // 更新状态
+        function updateStatus() {
+            const statusDiv = document.getElementById('sdk-status');
+            const bannerExists = !!document.getElementById('poki-auto-banner-ad');
+            const config = window.PokiSDK.getAutoBannerConfig();
+            
+            statusDiv.innerHTML = `
+                <div>SDK版本: ${window.PokiSDK ? '2.0.0' : '未加载'}</div>
+                <div>自动Banner: ${config.enabled ? '✅ 已启用' : '❌ 已禁用'}</div>
+                <div>Banner容器: ${bannerExists ? '✅ 已创建' : '❌ 不存在'}</div>
+                <div>页面URL: ${window.location.href}</div>
+                <div>用户代理: ${navigator.userAgent.substring(0, 60)}...</div>
+            `;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('=== 自动Banner广告测试页面 v2.0.0 ===', 'success');
+            addLog('页面URL: ' + window.location.href, 'info');
+            addLog('SDK自动加载中...', 'info');
+            
+            // 定期更新状态
+            setInterval(updateStatus, 2000);
+            updateStatus();
+            
+            // 检查Banner是否已创建
+            setTimeout(() => {
+                const bannerExists = !!document.getElementById('poki-auto-banner-ad');
+                if (bannerExists) {
+                    addLog('✅ 检测到自动创建的Banner容器', 'success');
+                } else {
+                    addLog('⚠️ 暂未检测到Banner容器，可能正在加载中...', 'warning');
+                }
+            }, 3000);
+        });
+        
+        // 页面卸载时清理
+        window.addEventListener('beforeunload', function() {
+            addLog('页面即将卸载，清理资源...', 'info');
+        });
+    </script>
+</body>
+</html> 

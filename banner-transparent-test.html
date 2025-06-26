@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner透明背景测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status.success { background: rgba(76, 175, 80, 0.3); }
+        .status.error { background: rgba(244, 67, 54, 0.3); }
+        .status.info { background: rgba(33, 150, 243, 0.3); }
+        
+        .game-area {
+            background: rgba(255, 255, 255, 0.1);
+            height: 300px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin: 20px 0;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .pattern-demo {
+            height: 100px;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(0, 0, 0, 0.1) 10px,
+                rgba(0, 0, 0, 0.1) 20px
+            );
+            margin: 20px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .transparency-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 10000;
+            max-width: 300px;
+        }
+        
+        /* 为了测试Banner透明效果，给body添加底部空间 */
+        body {
+            padding-bottom: 80px;
+        }
+        
+        /* 为了更好地显示透明效果，在页面底部添加一些内容 */
+        .bottom-content {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="transparency-info" id="transparencyInfo">
+        <div><strong>🔍 透明度检测</strong></div>
+        <div id="bannerTransparencyStatus">检测中...</div>
+    </div>
+
+    <!-- 背景内容 -->
+    <div class="bottom-content">
+        🌈 这是底部背景内容 - Banner应该是透明的，可以看到这个背景
+    </div>
+
+    <div class="container">
+        <h1>🌟 Banner透明背景测试 v2.1.7</h1>
+        
+        <div class="info-panel">
+            <h3>✨ 透明效果测试</h3>
+            <p>此页面测试Banner容器的透明背景效果。Banner应该：</p>
+            <ul>
+                <li>✅ 容器背景完全透明（background: transparent）</li>
+                <li>✅ ins元素背景透明</li>
+                <li>✅ 移除了边框和阴影</li>
+                <li>✅ 加载提示文字半透明</li>
+                <li>✅ 错误信息半透明</li>
+            </ul>
+            <p><strong>🎯 期望效果：</strong>Banner区域应该能够透过看到底部的彩色背景</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🎨 背景透明度演示</h3>
+            <div class="pattern-demo">
+                📐 这个条纹图案应该在Banner后面可见
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 测试操作</h3>
+            <button class="button" onclick="checkTransparency()">🔍 检查透明度</button>
+            <button class="button" onclick="toggleBannerVisibility()">👁️ 切换Banner可见性</button>
+            <button class="button" onclick="refreshBanner()">🔄 刷新Banner</button>
+            <button class="button" onclick="addTestBackground()">🎨 添加测试背景</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 透明度检测结果</h3>
+            <div id="transparencyResult" class="status info">点击"检查透明度"按钮开始检测</div>
+        </div>
+
+        <div class="game-area">
+            <div>🎮 游戏内容区域<br>Banner应该在底部透明显示</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 说明</h3>
+            <p>🔍 <strong>如何验证透明效果：</strong></p>
+            <ol>
+                <li>查看页面底部 - Banner区域应该能看到彩色背景</li>
+                <li>滚动页面 - Banner应该固定在底部且透明</li>
+                <li>点击"检查透明度"查看技术详情</li>
+                <li>使用浏览器开发者工具检查Banner元素样式</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="scripts/v2/poki-sdk.js"></script>
+    <script>
+        let bannerVisible = true;
+
+        // 检查透明度
+        function checkTransparency() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (!banner) {
+                document.getElementById('transparencyResult').innerHTML = 
+                    '<div class="status error">❌ Banner元素不存在</div>';
+                return;
+            }
+
+            const containerStyle = window.getComputedStyle(banner);
+            const insElement = banner.querySelector('.adsbygoogle');
+            const insStyle = insElement ? window.getComputedStyle(insElement) : null;
+
+            const containerBg = containerStyle.backgroundColor;
+            const containerBorder = containerStyle.border;
+            const containerShadow = containerStyle.boxShadow;
+            
+            const insBackground = insStyle ? insStyle.backgroundColor : 'N/A';
+            const insBorder = insStyle ? insStyle.border : 'N/A';
+
+            // 检查是否透明
+            const isContainerTransparent = containerBg === 'rgba(0, 0, 0, 0)' || 
+                                         containerBg === 'transparent' || 
+                                         containerBg === 'rgba(0,0,0,0)';
+            
+            const isInsTransparent = insStyle && (
+                insBackground === 'rgba(0, 0, 0, 0)' || 
+                insBackground === 'transparent' || 
+                insBackground === 'rgba(0,0,0,0)'
+            );
+
+            const hasNoBorder = containerBorder === 'none' || containerBorder === '0px none';
+            const hasNoShadow = containerShadow === 'none';
+
+            const result = `
+                <div class="status ${isContainerTransparent && isInsTransparent ? 'success' : 'error'}">
+                    ${isContainerTransparent && isInsTransparent ? '✅ 透明效果正确' : '❌ 透明效果异常'}
+                </div>
+                <div style="font-size: 12px; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                    <strong>容器样式：</strong><br>
+                    • 背景: ${containerBg} ${isContainerTransparent ? '✅' : '❌'}<br>
+                    • 边框: ${containerBorder} ${hasNoBorder ? '✅' : '❌'}<br>
+                    • 阴影: ${containerShadow} ${hasNoShadow ? '✅' : '❌'}<br><br>
+                    <strong>ins元素样式：</strong><br>
+                    • 背景: ${insBackground} ${isInsTransparent ? '✅' : '❌'}<br>
+                    • 边框: ${insBorder}<br><br>
+                    <strong>元素信息：</strong><br>
+                    • 容器ID: ${banner.id}<br>
+                    • 高度: ${banner.offsetHeight}px<br>
+                    • 位置: ${containerStyle.position}<br>
+                    • z-index: ${containerStyle.zIndex}
+                </div>
+            `;
+
+            document.getElementById('transparencyResult').innerHTML = result;
+        }
+
+        // 切换Banner可见性
+        function toggleBannerVisibility() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (!banner) return;
+
+            bannerVisible = !bannerVisible;
+            banner.style.display = bannerVisible ? 'flex' : 'none';
+            
+            document.querySelector('button[onclick="toggleBannerVisibility()"]').textContent = 
+                bannerVisible ? '👁️ 隐藏Banner' : '👁️ 显示Banner';
+        }
+
+        // 刷新Banner
+        function refreshBanner() {
+            console.log('🔄 刷新Banner');
+            PokiSDK.refreshBanner();
+            setTimeout(checkTransparency, 1000);
+        }
+
+        // 添加测试背景
+        function addTestBackground() {
+            const banner = document.getElementById('poki-auto-banner-ad');
+            if (!banner) return;
+
+            // 在Banner后面添加一个明显的测试背景
+            const testBg = document.createElement('div');
+            testBg.id = 'banner-test-background';
+            testBg.style.cssText = `
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                background: linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ffff00, #ff00ff);
+                z-index: 9998;
+                animation: colorShift 3s linear infinite;
+            `;
+
+            // 添加动画样式
+            if (!document.getElementById('color-animation-style')) {
+                const style = document.createElement('style');
+                style.id = 'color-animation-style';
+                style.textContent = `
+                    @keyframes colorShift {
+                        0% { filter: hue-rotate(0deg); }
+                        100% { filter: hue-rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // 移除旧的测试背景
+            const oldBg = document.getElementById('banner-test-background');
+            if (oldBg) oldBg.remove();
+
+            document.body.appendChild(testBg);
+            console.log('🎨 已添加彩色测试背景，如果Banner透明，应该能看到彩色条纹');
+        }
+
+        // 实时监控透明度状态
+        function updateTransparencyMonitor() {
+            const monitor = document.getElementById('bannerTransparencyStatus');
+            const banner = document.getElementById('poki-auto-banner-ad');
+            
+            if (!banner) {
+                monitor.innerHTML = `
+                    <div style="color: #ff6b6b;">❌ Banner不存在</div>
+                    <div style="font-size: 10px; color: #ccc;">等待创建...</div>
+                `;
+                return;
+            }
+
+            const style = window.getComputedStyle(banner);
+            const bg = style.backgroundColor;
+            const isTransparent = bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent';
+            
+            monitor.innerHTML = `
+                <div style="color: ${isTransparent ? '#4CAF50' : '#ff6b6b'};">
+                    ${isTransparent ? '✅' : '❌'} 背景: ${bg}
+                </div>
+                <div style="font-size: 10px; color: #ccc;">
+                    透明: ${isTransparent ? '是' : '否'}
+                </div>
+                <div style="font-size: 10px; color: #ccc;">
+                    更新: ${new Date().toLocaleTimeString()}
+                </div>
+            `;
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌟 Banner透明背景测试页面加载完成');
+            
+            // 开始监控透明度
+            setInterval(updateTransparencyMonitor, 1000);
+            
+            // 等待Banner创建后检查
+            setTimeout(function() {
+                console.log('🔍 检查Banner透明度');
+                checkTransparency();
+                addTestBackground(); // 自动添加测试背景
+            }, 2000);
+        });
+
+        // 监听Banner事件
+        window.addEventListener('bannerAdLoaded', function(event) {
+            console.log('🎉 Banner加载成功，检查透明效果');
+            setTimeout(checkTransparency, 200);
+        });
+
+        console.log('🚀 Banner透明背景测试开始 - SDK v2.1.7');
+        console.log('🎯 验证点: 容器背景transparent, ins背景transparent, 无边框阴影');
+    </script>
+</body>
+</html> 
